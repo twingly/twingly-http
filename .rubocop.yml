@@ -1,0 +1,34 @@
+inherit_from: .rubocop_todo.yml
+
+require:
+  - rubocop-rspec
+
+inherit_mode:
+  merge:
+    - Exclude
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - "**/*_spec.rb"
+    - "spec/spec_helper.rb"
+
+Metrics/MethodLength:
+  Max: 11
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+
+Layout/AlignHash:
+  Enabled: false
+
+Style/NumericLiterals:
+  Enabled: false
