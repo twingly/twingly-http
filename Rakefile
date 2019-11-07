@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Bundler rake tasks to handle gem releases
+require "bundler/gem_tasks"
+
 begin
   require "rspec/core/rake_task"
 
