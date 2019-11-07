@@ -2,7 +2,6 @@
 
 Robust HTTP client
 
-
 ## Release workflow
 
 * Bump the version in `lib/twingly/version.rb` in a commit, no need to push (the release task does that).
@@ -18,6 +17,3 @@ Robust HTTP client
         github_changelog_generator
 
 [twingly-rubygems]: https://rubygems.org/profiles/twingly
-[ruby-prof]: http://ruby-prof.rubyforge.org/
-[memory_profiler]: https://github.com/SamSaffron/memory_profiler
-[examples]: examples/url.rb
