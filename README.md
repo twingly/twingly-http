@@ -1,6 +1,32 @@
 # Twingly::HTTP
 
-Robust HTTP client
+[![Build Status](https://travis-ci.com/twingly/twingly-http.svg?branch=master)](https://travis-ci.com/twingly/twingly-http)
+
+Robust HTTP client, tailored by Twingly.
+
+## Getting Started
+
+Install the gem:
+
+    gem install twingly-http
+
+Example usage:
+
+    ruby -rlogger -rtwingly/http -e '\
+        logger = Logger.new(STDOUT); logger.level = :INFO; \
+        puts Twingly::HTTP::Client.new(logger: logger, \
+        base_user_agent: "").get("http://example.org").status'
+
+## Tests
+
+The tests require [Toxiproxy](https://github.com/Shopify/toxiproxy#1-installing-toxiproxy) to be installed and running. On macOS you can install it with Homebrew:
+
+    brew tap shopify/shopify
+    brew install toxiproxy
+
+Run tests with
+
+    bundle exec rake
 
 ## Release workflow
 
