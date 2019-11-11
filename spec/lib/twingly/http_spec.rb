@@ -99,40 +99,76 @@ RSpec.describe Twingly::HTTP::Client do
     end
 
     context "when given a host that redirects" do
-      let(:url)  { "http://this.redirects" }
-      let(:body) { "You were redirected here." }
+      let(:url) { "http://this.redirects" }
+      let(:stub_redirects) do
+        lambda do |start_url, base_redir_url, times|
+          times.times do |n|
+            redir_url = n == 0 ? start_url : "#{base_redir_url}#{n}"
 
-      before do
-        stub_request(:any, url)
-          .to_return(status: 302,
-                     headers: { "Location" => "http://redirected.here" })
-        stub_request(:any, "http://redirected.here")
-          .to_return(body: body)
-      end
+            stub_request(:any, redir_url)
+              .to_return(status: 302,
+                         headers: { "Location" => "#{base_redir_url}#{n + 1}" })
+          end
 
-      context "when not following redirects" do
-        before do
-          client.follow_redirects = false
-        end
-
-        it do
-          is_expected.to match(
-            headers: { "location" => "http://redirected.here" },
-            status: 302,
-            body: ""
-          )
+          stub_request(:any, "#{base_redir_url}#{times}").to_return(status: 200)
         end
       end
 
       context "when following redirects" do
         before do
           client.follow_redirects = true
+
+          stub_redirects.call(url, "http://redirect.", 1)
         end
 
         it do
           is_expected.to match(headers: {},
                                status: 200,
-                               body: body)
+                               body: "")
+        end
+      end
+
+      context "when not following redirects" do
+        before do
+          client.follow_redirects = false
+
+          stub_redirects.call(url, "http://redirect.", 1)
+        end
+
+        it do
+          is_expected.to match(headers: { "location" => "http://redirect.1" },
+                               status: 302,
+                               body: "")
+        end
+      end
+
+      context "when given a host that redirects many times" do
+        before do
+          redirects = 5
+          client.follow_redirects = true
+          client.follow_redirects_limit = redirects + 1
+
+          stub_redirects.call(url, "http://redirect.", redirects)
+        end
+
+        it do
+          is_expected.to match(headers: {},
+                               status: 200,
+                               body: "")
+        end
+      end
+
+      context "when given a host that redirects too many times" do
+        before do
+          client.follow_redirects = true
+          redirects = client.follow_redirects_limit + 1
+
+          stub_redirects.call(url, "http://redirect.", redirects)
+        end
+
+        it do
+          expect { subject }
+            .to raise_error(Twingly::HTTP::RedirectLimitReachedError)
         end
       end
     end

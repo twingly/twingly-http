@@ -2,7 +2,7 @@
 
 require "net/http"
 require "faraday"
-require "faraday_middleware"
+require "faraday_middleware/response/follow_redirects"
 
 require_relative "../faraday/logfmt_logger"
 require_relative "../faraday/url_size_limit"
@@ -13,6 +13,7 @@ module Twingly
   module HTTP
     class ConnectionError < StandardError; end
     class UrlSizeLimitExceededError < StandardError; end
+    class RedirectLimitReachedError < StandardError; end
     class Client # rubocop:disable Metrics/ClassLength
       DEFAULT_RETRYABLE_EXCEPTIONS = [
         Faraday::ConnectionFailed,
@@ -29,6 +30,7 @@ module Twingly
       DEFAULT_NUMBER_OF_RETRIES = 0
       DEFAULT_RETRY_INTERVAL = 1
       DEFAULT_MAX_URL_SIZE_BYTES = Float::INFINITY
+      DEFAULT_FOLLOW_REDIRECTS_LIMIT = 3
 
       attr_writer :http_timeout
       attr_writer :http_open_timeout
@@ -39,23 +41,14 @@ module Twingly
       attr_writer :request_id
       attr_writer :follow_redirects
 
+      attr_accessor :follow_redirects_limit
       attr_accessor :retryable_exceptions
 
       def initialize(logger:, base_user_agent:)
         @logger          = logger
         @base_user_agent = base_user_agent
-        @request_id      = nil
 
-        @http_timeout      = DEFAULT_HTTP_TIMEOUT
-        @http_open_timeout = DEFAULT_HTTP_OPEN_TIMEOUT
-
-        @retryable_exceptions = DEFAULT_RETRYABLE_EXCEPTIONS
-        @number_of_retries    = DEFAULT_NUMBER_OF_RETRIES
-        @retry_interval       = DEFAULT_RETRY_INTERVAL
-        @on_retry_callback    = nil
-        @follow_redirects     = false
-
-        @max_url_size_bytes = DEFAULT_MAX_URL_SIZE_BYTES
+        initialize_defaults
       end
 
       def get(url, params: {}, headers: {})
@@ -67,6 +60,19 @@ module Twingly
       end
 
       private
+
+      def initialize_defaults
+        @request_id             = nil
+        @http_timeout           = DEFAULT_HTTP_TIMEOUT
+        @http_open_timeout      = DEFAULT_HTTP_OPEN_TIMEOUT
+        @retryable_exceptions   = DEFAULT_RETRYABLE_EXCEPTIONS
+        @number_of_retries      = DEFAULT_NUMBER_OF_RETRIES
+        @retry_interval         = DEFAULT_RETRY_INTERVAL
+        @on_retry_callback      = nil
+        @follow_redirects       = false
+        @follow_redirects_limit = DEFAULT_FOLLOW_REDIRECTS_LIMIT
+        @max_url_size_bytes     = DEFAULT_MAX_URL_SIZE_BYTES
+      end
 
       # rubocop:disable Metrics/MethodLength
       def http_response_for(method, *args)
@@ -84,6 +90,8 @@ module Twingly
         raise ConnectionError
       rescue Faraday::UrlSizeLimit::LimitExceededError => error
         raise UrlSizeLimitExceededError, error.message
+      rescue FaradayMiddleware::RedirectLimitReached => error
+        raise RedirectLimitReachedError, error.message
       end
       # rubocop:enable all
 
@@ -131,7 +139,10 @@ module Twingly
                            headers: true,
                            bodies: true,
                            request_id: @request_id
-          faraday.use FaradayMiddleware::FollowRedirects if @follow_redirects
+          if @follow_redirects
+            faraday.use FaradayMiddleware::FollowRedirects,
+                        limit: @follow_redirects_limit
+          end
           faraday.adapter Faraday.default_adapter
           faraday.headers[:user_agent] = user_agent
         end
