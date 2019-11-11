@@ -1,5 +1,19 @@
 # Change Log
 
+## [v0.2.0](https://github.com/twingly/twingly-http/tree/v0.2.0) (2019-11-11)
+[Full Changelog](https://github.com/twingly/twingly-http/compare/v0.1.0...v0.2.0)
+
+**Closed issues:**
+
+- Update the README [\#3](https://github.com/twingly/twingly-http/issues/3)
+- Publish the gem [\#2](https://github.com/twingly/twingly-http/issues/2)
+
+**Merged pull requests:**
+
+- Be able to configure number of redirects to follow [\#6](https://github.com/twingly/twingly-http/pull/6) ([dentarg](https://github.com/dentarg))
+- Be able to set headers on GET requests [\#5](https://github.com/twingly/twingly-http/pull/5) ([dentarg](https://github.com/dentarg))
+- Be able to follow redirects [\#4](https://github.com/twingly/twingly-http/pull/4) ([dentarg](https://github.com/dentarg))
+
 ## [v0.1.0](https://github.com/twingly/twingly-http/tree/v0.1.0) (2019-11-07)
 **Merged pull requests:**
 
