@@ -4,6 +4,7 @@
 # from https://github.com/rspec/rspec-core/issues/1983#issuecomment-108748690
 $LOAD_PATH.delete_if { |p| File.expand_path(p) == File.expand_path("./lib") }
 
+require "json"
 require "rspec"
 require "toxiproxy"
 require "vcr"
