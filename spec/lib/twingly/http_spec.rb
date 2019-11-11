@@ -98,6 +98,45 @@ RSpec.describe Twingly::HTTP::Client do
       end
     end
 
+    context "when given a host that redirects" do
+      let(:url)  { "http://this.redirects" }
+      let(:body) { "You were redirected here." }
+
+      before do
+        stub_request(:any, url)
+          .to_return(status: 302,
+                     headers: { "Location" => "http://redirected.here" })
+        stub_request(:any, "http://redirected.here")
+          .to_return(body: body)
+      end
+
+      context "when not following redirects" do
+        before do
+          client.follow_redirects = false
+        end
+
+        it do
+          is_expected.to match(
+            headers: { "location" => "http://redirected.here" },
+            status: 302,
+            body: ""
+          )
+        end
+      end
+
+      context "when following redirects" do
+        before do
+          client.follow_redirects = true
+        end
+
+        it do
+          is_expected.to match(headers: {},
+                               status: 200,
+                               body: body)
+        end
+      end
+    end
+
     context "when given a host that times out" do
       before do
         # enable (quick) retries

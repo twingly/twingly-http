@@ -2,6 +2,7 @@
 
 require "net/http"
 require "faraday"
+require "faraday_middleware"
 
 require_relative "../faraday/logfmt_logger"
 require_relative "../faraday/url_size_limit"
@@ -36,6 +37,7 @@ module Twingly
       attr_writer :on_retry_callback
       attr_writer :max_url_size_bytes
       attr_writer :request_id
+      attr_writer :follow_redirects
 
       attr_accessor :retryable_exceptions
 
@@ -51,6 +53,7 @@ module Twingly
         @number_of_retries    = DEFAULT_NUMBER_OF_RETRIES
         @retry_interval       = DEFAULT_RETRY_INTERVAL
         @on_retry_callback    = nil
+        @follow_redirects     = false
 
         @max_url_size_bytes = DEFAULT_MAX_URL_SIZE_BYTES
       end
@@ -128,6 +131,7 @@ module Twingly
                            headers: true,
                            bodies: true,
                            request_id: @request_id
+          faraday.use FaradayMiddleware::FollowRedirects if @follow_redirects
           faraday.adapter Faraday.default_adapter
           faraday.headers[:user_agent] = user_agent
         end
