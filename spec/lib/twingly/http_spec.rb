@@ -168,7 +168,7 @@ RSpec.describe Twingly::HTTP::Client do
 
         it do
           expect { subject }
-            .to raise_error(Twingly::HTTP::RedirectLimitReached)
+            .to raise_error(Twingly::HTTP::RedirectLimitReachedError)
         end
       end
     end

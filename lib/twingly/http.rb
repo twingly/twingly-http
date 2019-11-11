@@ -13,7 +13,7 @@ module Twingly
   module HTTP
     class ConnectionError < StandardError; end
     class UrlSizeLimitExceededError < StandardError; end
-    class RedirectLimitReached < StandardError; end
+    class RedirectLimitReachedError < StandardError; end
     class Client # rubocop:disable Metrics/ClassLength
       DEFAULT_RETRYABLE_EXCEPTIONS = [
         Faraday::ConnectionFailed,
@@ -91,7 +91,7 @@ module Twingly
       rescue Faraday::UrlSizeLimit::LimitExceededError => error
         raise UrlSizeLimitExceededError, error.message
       rescue FaradayMiddleware::RedirectLimitReached => error
-        raise RedirectLimitReached, error.message
+        raise RedirectLimitReachedError, error.message
       end
       # rubocop:enable all
 
