@@ -505,6 +505,31 @@ RSpec.describe Twingly::HTTP::Client do
       end
     end
 
+    describe "headers" do
+      let(:headers) do
+        {
+          "Content-Type" => "application/json",
+        }
+      end
+
+      let(:request_response) do
+        client.get(url, headers: headers)
+      end
+
+      before do
+        headers_in_body_lamba = lambda do |request|
+          { body: request.headers.to_json }
+        end
+
+        stub_request(:get, url)
+          .to_return(&headers_in_body_lamba)
+      end
+
+      it "does request with specified headers" do
+        expect(JSON.parse(response.fetch(:body))).to include(headers)
+      end
+    end
+
     describe "params" do
       let(:params) do
         {

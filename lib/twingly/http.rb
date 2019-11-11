@@ -58,8 +58,8 @@ module Twingly
         @max_url_size_bytes = DEFAULT_MAX_URL_SIZE_BYTES
       end
 
-      def get(url, params: {})
-        http_response_for(:get, url: url, params: params)
+      def get(url, params: {}, headers: {})
+        http_response_for(:get, url: url, params: params, headers: headers)
       end
 
       def post(url, body:, headers: {})
@@ -87,11 +87,11 @@ module Twingly
       end
       # rubocop:enable all
 
-      def http_get_response(url:, params: {})
+      def http_get_response(url:, params:, headers:)
         binary_url = url.dup.force_encoding(Encoding::BINARY)
         http_client = create_http_client
 
-        headers = default_headers
+        headers = default_headers.merge(headers)
 
         http_client.get do |request|
           request.url(binary_url)
