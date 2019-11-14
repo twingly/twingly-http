@@ -33,7 +33,7 @@ VCR.configure do |conf|
 end
 
 RSpec.configure do |conf|
-  include EnvHelper
+  conf.include EnvHelper
 
   conf.after(:suite) do
     Toxiproxy.all.destroy # Be nice, end with a clean slate
