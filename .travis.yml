@@ -6,7 +6,8 @@ services:
 before_install:
   - travis_retry docker pull shopify/toxiproxy
   - travis_retry docker run --net=host -d shopify/toxiproxy
-  - travis_retry gem update --system
+  # workaround https://github.com/rubygems/rubygems/issues/3030
+  - yes | travis_retry gem update --system
   - travis_retry gem install bundler
 before_script:
   - export RSPEC_SEED=$(ruby -e "print rand(0xFFFF)")
