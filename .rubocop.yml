@@ -27,7 +27,7 @@ Style/TrailingCommaInArrayLiteral:
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: comma
 
-Layout/AlignHash:
+Layout/HashAlignment:
   Enabled: false
 
 Style/NumericLiterals:
