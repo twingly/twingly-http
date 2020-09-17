@@ -75,12 +75,12 @@ module Twingly
       end
 
       # rubocop:disable Metrics/MethodLength
-      def http_response_for(method, *args)
+      def http_response_for(method, **args)
         response = case method
                    when :get
-                     http_get_response(*args)
+                     http_get_response(**args)
                    when :post
-                     http_post_response(*args)
+                     http_post_response(**args)
                    end
 
         Response.new(headers: response.headers.to_h,
