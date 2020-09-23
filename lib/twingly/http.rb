@@ -2,7 +2,7 @@
 
 require "net/http"
 require "faraday"
-require "faraday_middleware/response/follow_redirects"
+require "faraday_middleware"
 
 require_relative "../faraday/logfmt_logger"
 require_relative "../faraday/url_size_limit"
