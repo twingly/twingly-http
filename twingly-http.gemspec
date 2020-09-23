@@ -14,8 +14,8 @@ Gem::Specification.new do |s|
   s.license     = "MIT"
   s.required_ruby_version = "~> 2.5"
 
-  s.add_dependency "faraday", "~> 0.15"
-  s.add_dependency "faraday_middleware", "~> 0.13"
+  s.add_dependency "faraday", "~> 1.0.1"
+  s.add_dependency "faraday_middleware", "~> 1.0.0"
 
   s.add_development_dependency "climate_control", "~> 0.1"
   s.add_development_dependency "rake", "~> 12"
