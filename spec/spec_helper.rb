@@ -14,7 +14,6 @@ require_relative "../lib/twingly/http"
 
 require_relative "spec_help/env_helper"
 require_relative "spec_help/fixture"
-require_relative "spec_help/null_logger"
 require_relative "spec_help/test_logger"
 require_relative "spec_help/toxiproxy_config"
 
