@@ -3,13 +3,13 @@
 class CustomError < StandardError; end
 
 RSpec.describe Twingly::HTTP::Client do
-  let(:logger)            { NullLogger.new }
+  let(:logger)            { Logger.new(File::NULL) }
   let(:url)               { "http://example.org/" }
   let(:base_user_agent)   { "Twingly::HTTP/1.0" }
 
   let(:client) do
     client =
-      described_class.new(logger: logger, base_user_agent: base_user_agent)
+      described_class.new(base_user_agent: base_user_agent, logger: logger)
 
     client.request_id = request_id if defined?(request_id)
 
@@ -464,6 +464,23 @@ RSpec.describe Twingly::HTTP::Client do
               .to raise_error(Twingly::HTTP::ConnectionError)
           end
         end
+      end
+    end
+  end
+
+  describe "#initialize" do
+    context "when no logger is given" do
+      subject(:default_logger) do
+        client = described_class.new(base_user_agent: base_user_agent)
+
+        client.logger
+      end
+
+      it { is_expected.to be_a(Logger) }
+
+      it "suppresses all output" do
+        expect { default_logger.info("foo") }
+          .to_not output(/foo/).to_stdout
       end
     end
   end

@@ -42,11 +42,12 @@ module Twingly
       attr_writer :follow_redirects
 
       attr_accessor :follow_redirects_limit
+      attr_accessor :logger
       attr_accessor :retryable_exceptions
 
-      def initialize(logger:, base_user_agent:)
-        @logger          = logger
+      def initialize(base_user_agent:, logger: default_logger)
         @base_user_agent = base_user_agent
+        @logger          = logger
 
         initialize_defaults
       end
@@ -60,6 +61,10 @@ module Twingly
       end
 
       private
+
+      def default_logger
+        Logger.new(File::NULL)
+      end
 
       def initialize_defaults
         @request_id             = nil
