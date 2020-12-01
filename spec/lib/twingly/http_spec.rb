@@ -3,12 +3,13 @@
 class CustomError < StandardError; end
 
 RSpec.describe Twingly::HTTP::Client do
+  let(:logger)            { Logger.new(File::NULL) }
   let(:url)               { "http://example.org/" }
   let(:base_user_agent)   { "Twingly::HTTP/1.0" }
 
   let(:client) do
     client =
-      described_class.new(base_user_agent: base_user_agent)
+      described_class.new(base_user_agent: base_user_agent, logger: logger)
 
     client.request_id = request_id if defined?(request_id)
 
@@ -308,15 +309,6 @@ RSpec.describe Twingly::HTTP::Client do
       let(:commit)     { "b5c40853a18a29982d65034be2ed53698112f60f" }
       let(:release)    { "v112" }
 
-      let(:client) do
-        client =
-          described_class.new(base_user_agent: base_user_agent, logger: logger)
-
-        client.request_id = request_id if defined?(request_id)
-
-        client
-      end
-
       describe "request" do
         let(:expected_log_row) do
           "at=info " \
@@ -476,18 +468,18 @@ RSpec.describe Twingly::HTTP::Client do
     end
   end
 
-  describe "#initialize" do
-    let(:client) { described_class.new(base_user_agent: base_user_agent) }
+  describe "default logger" do
+    subject(:logger) do
+      client = described_class.new(base_user_agent: base_user_agent)
 
-    context "when no logger is given" do
-      it "defaults to a Logger" do
-        expect(client.logger).to be_a(Logger)
-      end
+      client.logger
+    end
 
-      it "defaults to 'dev/null'" do
-        expect { client.logger.info("foo") }
-          .to_not output(/foo/).to_stdout
-      end
+    it { is_expected.to be_a(Logger) }
+
+    it "suppresses all output" do
+      expect { logger.info("foo") }
+        .to_not output(/foo/).to_stdout
     end
   end
 
