@@ -1,5 +1,19 @@
 # Changelog
 
+## [v0.2.2](https://github.com/twingly/twingly-http/tree/v0.2.2) (2020-12-02)
+
+[Full Changelog](https://github.com/twingly/twingly-http/compare/v0.2.1...v0.2.2)
+
+**Implemented enhancements:**
+
+- Ruby 2.7 support [\#10](https://github.com/twingly/twingly-http/issues/10)
+- Be able to use without a logger [\#9](https://github.com/twingly/twingly-http/issues/9)
+
+**Merged pull requests:**
+
+- Make logger optional in client [\#13](https://github.com/twingly/twingly-http/pull/13) ([Pontus4](https://github.com/Pontus4))
+- Allow newer versions of faraday [\#12](https://github.com/twingly/twingly-http/pull/12) ([Pontus4](https://github.com/Pontus4))
+
 ## [v0.2.1](https://github.com/twingly/twingly-http/tree/v0.2.1) (2020-09-23)
 
 [Full Changelog](https://github.com/twingly/twingly-http/compare/v0.2.0...v0.2.1)
