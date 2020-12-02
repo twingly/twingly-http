@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary     = "Robust HTTP client"
   s.description = "Robust HTTP client tailored by Twingly"
   s.license     = "MIT"
-  s.required_ruby_version = "~> 2.5"
+  s.required_ruby_version = ">= 2.5"
 
   s.add_dependency "faraday", "~> 1", ">= 1.0.1"
   s.add_dependency "faraday_middleware", "~> 1.0.0"
