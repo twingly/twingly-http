@@ -1,8 +1,8 @@
 # Changelog
 
-## [v0.2.2](https://github.com/twingly/twingly-http/tree/v0.2.2) (2020-12-02)
+## [v0.3.0](https://github.com/twingly/twingly-http/tree/v0.3.0) (2020-12-02)
 
-[Full Changelog](https://github.com/twingly/twingly-http/compare/v0.2.1...v0.2.2)
+[Full Changelog](https://github.com/twingly/twingly-http/compare/v0.2.1...v0.3.0)
 
 **Implemented enhancements:**
 
