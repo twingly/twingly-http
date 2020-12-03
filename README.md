@@ -1,6 +1,6 @@
 # Twingly::HTTP
 
-[![Build Status](https://travis-ci.com/twingly/twingly-http.svg?branch=master)](https://travis-ci.com/twingly/twingly-http)
+[![GitHub Build Status](https://github.com/twingly/twingly-http/workflows/CI/badge.svg?branch=master)](https://github.com/twingly/twingly-http/actions)
 
 Robust HTTP client, tailored by Twingly.
 
