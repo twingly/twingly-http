@@ -12,7 +12,8 @@ jobs:
       toxiproxy:
         image: shopify/toxiproxy
         ports:
-          - 8474:8474
+          - 8080:8080 # port for the http_host "toxic"
+          - 8474:8474 # port for controlling toxiproxy
 
     strategy:
       fail-fast: false
