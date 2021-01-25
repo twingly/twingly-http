@@ -1,0 +1,8 @@
+version: "3.8"
+
+services:
+  toxiproxy:
+    image: shopify/toxiproxy
+    ports:
+      - 8080:8080 # port for the http_host "toxic"
+      - 8474:8474 # port for controlling toxiproxy
