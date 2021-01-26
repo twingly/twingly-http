@@ -32,10 +32,9 @@ client.get("http://example.org").status
 
 ## Tests
 
-The tests require [Toxiproxy](https://github.com/Shopify/toxiproxy#1-installing-toxiproxy) to be installed and running. On macOS you can install it with Homebrew:
+The tests require [Toxiproxy](https://github.com/Shopify/toxiproxy)
 
-    brew tap shopify/shopify
-    brew install toxiproxy
+    docker-compose up
 
 Run tests with
 
