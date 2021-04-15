@@ -1,5 +1,19 @@
 # Changelog
 
+## [v0.3.1](https://github.com/twingly/twingly-http/tree/v0.3.1) (2021-04-15)
+
+[Full Changelog](https://github.com/twingly/twingly-http/compare/v0.3.0...v0.3.1)
+
+**Fixed bugs:**
+
+- Tests fails under "ruby head" [\#16](https://github.com/twingly/twingly-http/issues/16)
+
+**Merged pull requests:**
+
+- Ruby 3.0.0 on CI [\#19](https://github.com/twingly/twingly-http/pull/19) ([walro](https://github.com/walro))
+- Run Toxiproxy on Docker [\#18](https://github.com/twingly/twingly-http/pull/18) ([Pontus4](https://github.com/Pontus4))
+- Run CI on GitHub Actions [\#15](https://github.com/twingly/twingly-http/pull/15) ([walro](https://github.com/walro))
+
 ## [v0.3.0](https://github.com/twingly/twingly-http/tree/v0.3.0) (2020-12-02)
 
 [Full Changelog](https://github.com/twingly/twingly-http/compare/v0.2.1...v0.3.0)
