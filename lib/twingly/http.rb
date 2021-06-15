@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "logger"
 require "net/http"
 require "faraday"
 require "faraday_middleware"
