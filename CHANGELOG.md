@@ -1,5 +1,14 @@
 # Changelog
 
+## [v0.3.2](https://github.com/twingly/twingly-http/tree/v0.3.2) (2021-06-16)
+
+[Full Changelog](https://github.com/twingly/twingly-http/compare/v0.3.1...v0.3.2)
+
+**Merged pull requests:**
+
+- Require `"logger"` [\#23](https://github.com/twingly/twingly-http/pull/23) ([Pontus4](https://github.com/Pontus4))
+- Run CI on latest Rubies [\#22](https://github.com/twingly/twingly-http/pull/22) ([walro](https://github.com/walro))
+
 ## [v0.3.1](https://github.com/twingly/twingly-http/tree/v0.3.1) (2021-04-15)
 
 [Full Changelog](https://github.com/twingly/twingly-http/compare/v0.3.0...v0.3.1)
