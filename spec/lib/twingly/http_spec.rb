@@ -24,7 +24,7 @@ RSpec.describe Twingly::HTTP::Client do
     }
   end
 
-  RSpec.shared_examples "common HTTP behaviour for" do |method|
+  RSpec.shared_examples "common HTTP behaviour for" do |method, stub_url|
     describe "User-Agent" do
       before do
         user_agent_in_body_lamba = lambda do |request|
@@ -182,7 +182,7 @@ RSpec.describe Twingly::HTTP::Client do
 
       context "when creating the connection" do
         before do
-          stub_request(:any, "example.org").to_timeout
+          stub_request(:any, stub_url).to_timeout
         end
 
         it "should raise exception" do
@@ -203,7 +203,7 @@ RSpec.describe Twingly::HTTP::Client do
 
       context "when reading the response" do
         before do
-          stub_request(:any, "example.org").to_raise(Net::ReadTimeout)
+          stub_request(:any, stub_url).to_raise(Net::ReadTimeout)
         end
 
         it "should raise exception" do
@@ -228,7 +228,7 @@ RSpec.describe Twingly::HTTP::Client do
       let(:exception) { SocketError }
 
       before do
-        stub_request(:any, "example.org")
+        stub_request(:any, stub_url)
           .to_raise(exception).then
           .to_return(body: body)
       end
@@ -486,7 +486,7 @@ RSpec.describe Twingly::HTTP::Client do
   end
 
   describe "#post", vcr: Fixture.post_example_org do
-    include_examples "common HTTP behaviour for", :post
+    include_examples "common HTTP behaviour for", :post, "example.org"
 
     let(:post_body)    {}
     let(:post_headers) { {} }
@@ -534,7 +534,7 @@ RSpec.describe Twingly::HTTP::Client do
   end
 
   describe "#get", vcr: Fixture.example_org do
-    include_examples "common HTTP behaviour for", :get
+    include_examples "common HTTP behaviour for", :get, "example.org"
 
     let(:request_response) do
       client.get(url)
