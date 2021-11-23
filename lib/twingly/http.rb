@@ -69,6 +69,10 @@ module Twingly
         http_response_for(:patch, url: url, body: body, headers: headers)
       end
 
+      def delete(url, params: {}, headers: {})
+        http_response_for(:delete, url: url, params: params, headers: headers)
+      end
+
       private
 
       def default_logger
@@ -90,6 +94,7 @@ module Twingly
 
       # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/CyclomaticComplexity
       def http_response_for(method, **args)
         response = case method
                    when :get
@@ -100,6 +105,8 @@ module Twingly
                      http_put_response(**args)
                    when :patch
                      http_patch_response(**args)
+                   when :delete
+                     http_delete_response(**args)
                    end
 
         Response.new(headers: response.headers.to_h,
@@ -169,6 +176,21 @@ module Twingly
           request.url(binary_url)
           request.headers.merge!(headers)
           request.body = body
+          request.options.timeout = @http_timeout
+          request.options.open_timeout = @http_open_timeout
+        end
+      end
+
+      def http_delete_response(url:, params:, headers:)
+        binary_url = url.dup.force_encoding(Encoding::BINARY)
+        http_client = create_http_client
+
+        headers = default_headers.merge(headers)
+
+        http_client.delete do |request|
+          request.url(binary_url)
+          request.params.merge!(params)
+          request.headers.merge!(headers)
           request.options.timeout = @http_timeout
           request.options.open_timeout = @http_open_timeout
         end

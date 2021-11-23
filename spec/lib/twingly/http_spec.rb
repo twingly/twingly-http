@@ -722,4 +722,82 @@ RSpec.describe Twingly::HTTP::Client do
       end
     end
   end
+
+  describe "#delete", vcr: Fixture.delete_httpbin_org do
+    include_examples "common HTTP behaviour for", :delete, "https://httpbin.org/delete"
+
+    let(:url) { "https://httpbin.org/delete" }
+
+    let(:request_response) do
+      client.delete(url)
+    end
+
+    it do
+      is_expected.to match(headers: be_an_instance_of(Hash),
+                           status: 200,
+                           body: be_an_instance_of(String))
+    end
+
+    describe "headers" do
+      let(:headers) do
+        {
+          "Content-Type" => "application/json",
+        }
+      end
+
+      let(:request_response) do
+        client.delete(url, headers: headers)
+      end
+
+      before do
+        headers_in_body_lamba = lambda do |request|
+          { body: request.headers.to_json }
+        end
+
+        stub_request(:delete, url)
+          .to_return(&headers_in_body_lamba)
+      end
+
+      it "does request with specified headers" do
+        expect(JSON.parse(response.fetch(:body))).to include(headers)
+      end
+    end
+
+    describe "params" do
+      let(:params) do
+        {
+          foo: "bar baz",
+          size: 10,
+        }
+      end
+
+      context "a URL without params" do
+        let!(:stubbed_request) do
+          stub_request(:delete, url).with(query: params)
+        end
+
+        before { client.delete(url, params: params) }
+
+        it "adds the given params to the URL" do
+          expect(stubbed_request).to have_been_requested
+        end
+      end
+
+      context "a URL with params" do
+        let(:scheme_and_host) { "https://httpbin.org/delete" }
+        let(:url)             { "#{scheme_and_host}?param_in_url=yes" }
+        let(:expected_params) { params.merge(param_in_url: "yes") }
+
+        let!(:stubbed_request) do
+          stub_request(:delete, scheme_and_host).with(query: expected_params)
+        end
+
+        before { client.delete(url, params: params) }
+
+        it "merges the given params with those in the URL" do
+          expect(stubbed_request).to have_been_requested
+        end
+      end
+    end
+  end
 end
