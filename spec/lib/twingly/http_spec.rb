@@ -622,4 +622,54 @@ RSpec.describe Twingly::HTTP::Client do
       end
     end
   end
+
+  describe "#put", vcr: Fixture.put_httpbin_org do
+    include_examples "common HTTP behaviour for", :put, "https://httpbin.org/put"
+
+    let(:url) { "https://httpbin.org/put" }
+
+    let(:put_body)    {}
+    let(:put_headers) { {} }
+    let(:request_response) do
+      client.put(url, body: put_body, headers: put_headers)
+    end
+
+    describe "headers" do
+      let(:headers) do
+        {
+          "Content-Type" => "application/json",
+        }
+      end
+
+      before do
+        headers_in_body_lamba = lambda do |request|
+          { body: request.headers.to_json }
+        end
+
+        stub_request(:put, url)
+          .to_return(&headers_in_body_lamba)
+      end
+
+      it "does request with specified headers" do
+        expect(JSON.parse(response.fetch(:body))).to include(put_headers)
+      end
+    end
+
+    describe "body" do
+      let(:put_body) { { "some" => "json" }.to_json }
+
+      before do
+        request_body_in_body_lamba = lambda do |request|
+          { body: request.body }
+        end
+
+        stub_request(:put, url)
+          .to_return(&request_body_in_body_lamba)
+      end
+
+      it "does request with specified body" do
+        expect(response.fetch(:body)).to include(put_body)
+      end
+    end
+  end
 end
