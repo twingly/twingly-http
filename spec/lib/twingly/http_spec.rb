@@ -672,4 +672,54 @@ RSpec.describe Twingly::HTTP::Client do
       end
     end
   end
+
+  describe "#patch", vcr: Fixture.patch_httpbin_org do
+    include_examples "common HTTP behaviour for", :patch, "https://httpbin.org/patch"
+
+    let(:url) { "https://httpbin.org/patch" }
+
+    let(:patch_body)    {}
+    let(:patch_headers) { {} }
+    let(:request_response) do
+      client.patch(url, body: patch_body, headers: patch_headers)
+    end
+
+    describe "headers" do
+      let(:headers) do
+        {
+          "Content-Type" => "application/json",
+        }
+      end
+
+      before do
+        headers_in_body_lamba = lambda do |request|
+          { body: request.headers.to_json }
+        end
+
+        stub_request(:patch, url)
+          .to_return(&headers_in_body_lamba)
+      end
+
+      it "does request with specified headers" do
+        expect(JSON.parse(response.fetch(:body))).to include(patch_headers)
+      end
+    end
+
+    describe "body" do
+      let(:patch_body) { { "some" => "json" }.to_json }
+
+      before do
+        request_body_in_body_lamba = lambda do |request|
+          { body: request.body }
+        end
+
+        stub_request(:patch, url)
+          .to_return(&request_body_in_body_lamba)
+      end
+
+      it "does request with specified body" do
+        expect(response.fetch(:body)).to include(patch_body)
+      end
+    end
+  end
 end

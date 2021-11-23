@@ -65,6 +65,10 @@ module Twingly
         http_response_for(:put, url: url, body: body, headers: headers)
       end
 
+      def patch(url, body:, headers: {})
+        http_response_for(:patch, url: url, body: body, headers: headers)
+      end
+
       private
 
       def default_logger
@@ -85,6 +89,7 @@ module Twingly
       end
 
       # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize
       def http_response_for(method, **args)
         response = case method
                    when :get
@@ -93,6 +98,8 @@ module Twingly
                      http_post_response(**args)
                    when :put
                      http_put_response(**args)
+                   when :patch
+                     http_patch_response(**args)
                    end
 
         Response.new(headers: response.headers.to_h,
@@ -144,6 +151,21 @@ module Twingly
         headers = default_headers.merge(headers)
 
         http_client.put do |request|
+          request.url(binary_url)
+          request.headers.merge!(headers)
+          request.body = body
+          request.options.timeout = @http_timeout
+          request.options.open_timeout = @http_open_timeout
+        end
+      end
+
+      def http_patch_response(url:, body:, headers:)
+        binary_url = url.dup.force_encoding(Encoding::BINARY)
+        http_client = create_http_client
+
+        headers = default_headers.merge(headers)
+
+        http_client.patch do |request|
           request.url(binary_url)
           request.headers.merge!(headers)
           request.body = body
