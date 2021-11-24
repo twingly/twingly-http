@@ -92,22 +92,8 @@ module Twingly
         @max_url_size_bytes     = DEFAULT_MAX_URL_SIZE_BYTES
       end
 
-      # rubocop:disable Metrics/MethodLength
-      # rubocop:disable Metrics/AbcSize
-      # rubocop:disable Metrics/CyclomaticComplexity
       def http_response_for(method, **args)
-        response = case method
-                   when :get
-                     http_get_response(**args)
-                   when :post
-                     http_post_response(**args)
-                   when :put
-                     http_put_response(**args)
-                   when :patch
-                     http_patch_response(**args)
-                   when :delete
-                     http_delete_response(**args)
-                   end
+        response = send("http_#{method}_response", **args)
 
         Response.new(headers: response.headers.to_h,
                      status: response.status,
@@ -119,7 +105,6 @@ module Twingly
       rescue FaradayMiddleware::RedirectLimitReached => error
         raise RedirectLimitReachedError, error.message
       end
-      # rubocop:enable all
 
       def http_get_response(url:, params:, headers:)
         binary_url = url.dup.force_encoding(Encoding::BINARY)
