@@ -1,5 +1,17 @@
 # Changelog
 
+## [v0.4.0](https://github.com/twingly/twingly-http/tree/v0.4.0) (2021-11-26)
+
+[Full Changelog](https://github.com/twingly/twingly-http/compare/v0.3.2...v0.4.0)
+
+**Implemented enhancements:**
+
+- Add `PUT`, `PATCH` and `DELETE` methods [\#24](https://github.com/twingly/twingly-http/issues/24)
+
+**Merged pull requests:**
+
+- Extend client with `PUT`, `PATCH` and `DELETE` methods [\#25](https://github.com/twingly/twingly-http/pull/25) ([Pontus4](https://github.com/Pontus4))
+
 ## [v0.3.2](https://github.com/twingly/twingly-http/tree/v0.3.2) (2021-06-16)
 
 [Full Changelog](https://github.com/twingly/twingly-http/compare/v0.3.1...v0.3.2)
