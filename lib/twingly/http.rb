@@ -61,6 +61,18 @@ module Twingly
         http_response_for(:post, url: url, body: body, headers: headers)
       end
 
+      def put(url, body:, headers: {})
+        http_response_for(:put, url: url, body: body, headers: headers)
+      end
+
+      def patch(url, body:, headers: {})
+        http_response_for(:patch, url: url, body: body, headers: headers)
+      end
+
+      def delete(url, params: {}, headers: {})
+        http_response_for(:delete, url: url, params: params, headers: headers)
+      end
+
       private
 
       def default_logger
@@ -80,14 +92,8 @@ module Twingly
         @max_url_size_bytes     = DEFAULT_MAX_URL_SIZE_BYTES
       end
 
-      # rubocop:disable Metrics/MethodLength
       def http_response_for(method, **args)
-        response = case method
-                   when :get
-                     http_get_response(**args)
-                   when :post
-                     http_post_response(**args)
-                   end
+        response = send("http_#{method}_response", **args)
 
         Response.new(headers: response.headers.to_h,
                      status: response.status,
@@ -99,7 +105,6 @@ module Twingly
       rescue FaradayMiddleware::RedirectLimitReached => error
         raise RedirectLimitReachedError, error.message
       end
-      # rubocop:enable all
 
       def http_get_response(url:, params:, headers:)
         binary_url = url.dup.force_encoding(Encoding::BINARY)
@@ -126,6 +131,51 @@ module Twingly
           request.url(binary_url)
           request.headers.merge!(headers)
           request.body = body
+          request.options.timeout = @http_timeout
+          request.options.open_timeout = @http_open_timeout
+        end
+      end
+
+      def http_put_response(url:, body:, headers:)
+        binary_url = url.dup.force_encoding(Encoding::BINARY)
+        http_client = create_http_client
+
+        headers = default_headers.merge(headers)
+
+        http_client.put do |request|
+          request.url(binary_url)
+          request.headers.merge!(headers)
+          request.body = body
+          request.options.timeout = @http_timeout
+          request.options.open_timeout = @http_open_timeout
+        end
+      end
+
+      def http_patch_response(url:, body:, headers:)
+        binary_url = url.dup.force_encoding(Encoding::BINARY)
+        http_client = create_http_client
+
+        headers = default_headers.merge(headers)
+
+        http_client.patch do |request|
+          request.url(binary_url)
+          request.headers.merge!(headers)
+          request.body = body
+          request.options.timeout = @http_timeout
+          request.options.open_timeout = @http_open_timeout
+        end
+      end
+
+      def http_delete_response(url:, params:, headers:)
+        binary_url = url.dup.force_encoding(Encoding::BINARY)
+        http_client = create_http_client
+
+        headers = default_headers.merge(headers)
+
+        http_client.delete do |request|
+          request.url(binary_url)
+          request.params.merge!(params)
+          request.headers.merge!(headers)
           request.options.timeout = @http_timeout
           request.options.open_timeout = @http_open_timeout
         end

@@ -24,7 +24,7 @@ RSpec.describe Twingly::HTTP::Client do
     }
   end
 
-  RSpec.shared_examples "common HTTP behaviour for" do |method|
+  RSpec.shared_examples "common HTTP behaviour for" do |method, stub_url|
     describe "User-Agent" do
       before do
         user_agent_in_body_lamba = lambda do |request|
@@ -182,7 +182,7 @@ RSpec.describe Twingly::HTTP::Client do
 
       context "when creating the connection" do
         before do
-          stub_request(:any, "example.org").to_timeout
+          stub_request(:any, stub_url).to_timeout
         end
 
         it "should raise exception" do
@@ -203,7 +203,7 @@ RSpec.describe Twingly::HTTP::Client do
 
       context "when reading the response" do
         before do
-          stub_request(:any, "example.org").to_raise(Net::ReadTimeout)
+          stub_request(:any, stub_url).to_raise(Net::ReadTimeout)
         end
 
         it "should raise exception" do
@@ -228,7 +228,7 @@ RSpec.describe Twingly::HTTP::Client do
       let(:exception) { SocketError }
 
       before do
-        stub_request(:any, "example.org")
+        stub_request(:any, stub_url)
           .to_raise(exception).then
           .to_return(body: body)
       end
@@ -486,7 +486,7 @@ RSpec.describe Twingly::HTTP::Client do
   end
 
   describe "#post", vcr: Fixture.post_example_org do
-    include_examples "common HTTP behaviour for", :post
+    include_examples "common HTTP behaviour for", :post, "example.org"
 
     let(:post_body)    {}
     let(:post_headers) { {} }
@@ -534,7 +534,7 @@ RSpec.describe Twingly::HTTP::Client do
   end
 
   describe "#get", vcr: Fixture.example_org do
-    include_examples "common HTTP behaviour for", :get
+    include_examples "common HTTP behaviour for", :get, "example.org"
 
     let(:request_response) do
       client.get(url)
@@ -615,6 +615,184 @@ RSpec.describe Twingly::HTTP::Client do
         end
 
         before { client.get(url, params: params) }
+
+        it "merges the given params with those in the URL" do
+          expect(stubbed_request).to have_been_requested
+        end
+      end
+    end
+  end
+
+  describe "#put", vcr: Fixture.put_httpbin_org do
+    include_examples "common HTTP behaviour for", :put, "https://httpbin.org/put"
+
+    let(:url) { "https://httpbin.org/put" }
+
+    let(:put_body)    {}
+    let(:put_headers) { {} }
+    let(:request_response) do
+      client.put(url, body: put_body, headers: put_headers)
+    end
+
+    describe "headers" do
+      let(:headers) do
+        {
+          "Content-Type" => "application/json",
+        }
+      end
+
+      before do
+        headers_in_body_lamba = lambda do |request|
+          { body: request.headers.to_json }
+        end
+
+        stub_request(:put, url)
+          .to_return(&headers_in_body_lamba)
+      end
+
+      it "does request with specified headers" do
+        expect(JSON.parse(response.fetch(:body))).to include(put_headers)
+      end
+    end
+
+    describe "body" do
+      let(:put_body) { { "some" => "json" }.to_json }
+
+      before do
+        request_body_in_body_lamba = lambda do |request|
+          { body: request.body }
+        end
+
+        stub_request(:put, url)
+          .to_return(&request_body_in_body_lamba)
+      end
+
+      it "does request with specified body" do
+        expect(response.fetch(:body)).to include(put_body)
+      end
+    end
+  end
+
+  describe "#patch", vcr: Fixture.patch_httpbin_org do
+    include_examples "common HTTP behaviour for", :patch, "https://httpbin.org/patch"
+
+    let(:url) { "https://httpbin.org/patch" }
+
+    let(:patch_body)    {}
+    let(:patch_headers) { {} }
+    let(:request_response) do
+      client.patch(url, body: patch_body, headers: patch_headers)
+    end
+
+    describe "headers" do
+      let(:headers) do
+        {
+          "Content-Type" => "application/json",
+        }
+      end
+
+      before do
+        headers_in_body_lamba = lambda do |request|
+          { body: request.headers.to_json }
+        end
+
+        stub_request(:patch, url)
+          .to_return(&headers_in_body_lamba)
+      end
+
+      it "does request with specified headers" do
+        expect(JSON.parse(response.fetch(:body))).to include(patch_headers)
+      end
+    end
+
+    describe "body" do
+      let(:patch_body) { { "some" => "json" }.to_json }
+
+      before do
+        request_body_in_body_lamba = lambda do |request|
+          { body: request.body }
+        end
+
+        stub_request(:patch, url)
+          .to_return(&request_body_in_body_lamba)
+      end
+
+      it "does request with specified body" do
+        expect(response.fetch(:body)).to include(patch_body)
+      end
+    end
+  end
+
+  describe "#delete", vcr: Fixture.delete_httpbin_org do
+    include_examples "common HTTP behaviour for", :delete, "https://httpbin.org/delete"
+
+    let(:url) { "https://httpbin.org/delete" }
+
+    let(:request_response) do
+      client.delete(url)
+    end
+
+    it do
+      is_expected.to match(headers: be_an_instance_of(Hash),
+                           status: 200,
+                           body: be_an_instance_of(String))
+    end
+
+    describe "headers" do
+      let(:headers) do
+        {
+          "Content-Type" => "application/json",
+        }
+      end
+
+      let(:request_response) do
+        client.delete(url, headers: headers)
+      end
+
+      before do
+        headers_in_body_lamba = lambda do |request|
+          { body: request.headers.to_json }
+        end
+
+        stub_request(:delete, url)
+          .to_return(&headers_in_body_lamba)
+      end
+
+      it "does request with specified headers" do
+        expect(JSON.parse(response.fetch(:body))).to include(headers)
+      end
+    end
+
+    describe "params" do
+      let(:params) do
+        {
+          foo: "bar baz",
+          size: 10,
+        }
+      end
+
+      context "a URL without params" do
+        let!(:stubbed_request) do
+          stub_request(:delete, url).with(query: params)
+        end
+
+        before { client.delete(url, params: params) }
+
+        it "adds the given params to the URL" do
+          expect(stubbed_request).to have_been_requested
+        end
+      end
+
+      context "a URL with params" do
+        let(:scheme_and_host) { "https://httpbin.org/delete" }
+        let(:url)             { "#{scheme_and_host}?param_in_url=yes" }
+        let(:expected_params) { params.merge(param_in_url: "yes") }
+
+        let!(:stubbed_request) do
+          stub_request(:delete, scheme_and_host).with(query: expected_params)
+        end
+
+        before { client.delete(url, params: params) }
 
         it "merges the given params with those in the URL" do
           expect(stubbed_request).to have_been_requested

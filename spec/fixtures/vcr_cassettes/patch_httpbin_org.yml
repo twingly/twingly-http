@@ -1,0 +1,49 @@
+---
+http_interactions:
+- request:
+    method: patch
+    uri: https://httpbin.org/patch
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      User-Agent:
+      - Twingly::HTTP/1.0 (Release/unknown_heroku_release_version; Commit/unknown_heroku_slug_commit)
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 22 Nov 2021 13:58:43 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '556'
+      Connection:
+      - keep-alive
+      Server:
+      - gunicorn/19.9.0
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Credentials:
+      - 'true'
+    body:
+      encoding: UTF-8
+      string: "{\n  \"args\": {}, \n  \"data\": \"\", \n  \"files\": {}, \n  \"form\":
+        {}, \n  \"headers\": {\n    \"Accept\": \"*/*\", \n    \"Accept-Encoding\":
+        \"gzip;q=1.0,deflate;q=0.6,identity;q=0.3\", \n    \"Content-Length\": \"0\",
+        \n    \"Content-Type\": \"application/x-www-form-urlencoded\", \n    \"Host\":
+        \"httpbin.org\", \n    \"User-Agent\": \"Twingly::HTTP/1.0 (Release/unknown_heroku_release_version;
+        Commit/unknown_heroku_slug_commit)\", \n    \"X-Amzn-Trace-Id\": \"Root=1-619ba213-335cd69c77cbb3347de2e074\"\n
+        \ }, \n  \"json\": null, \n  \"origin\": \"80.252.185.203\", \n  \"url\":
+        \"https://httpbin.org/patch\"\n}\n"
+    http_version:
+  recorded_at: Mon, 22 Nov 2021 13:58:43 GMT
+recorded_with: VCR 5.1.0
