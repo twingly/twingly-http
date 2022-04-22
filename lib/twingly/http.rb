@@ -241,9 +241,9 @@ module Twingly
 
       def app_metadata
         {
-          "dyno_id": Heroku.dyno_id,
-          "release": Heroku.release_version,
-          "git_head": Heroku.slug_commit,
+          dyno_id: Heroku.dyno_id,
+          release: Heroku.release_version,
+          git_head: Heroku.slug_commit,
         }
       end
 

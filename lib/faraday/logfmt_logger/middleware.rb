@@ -26,10 +26,10 @@ module Faraday
       def call(env)
         info("request") do
           log_entry = {
-            "source": "upstream-request",
-            "method": env.method.upcase,
-            "url": apply_filters(env.url.to_s),
-            "request_id": request_id,
+            source: "upstream-request",
+            method: env.method.upcase,
+            url: apply_filters(env.url.to_s),
+            request_id: request_id,
           }.merge(app_metadata)
 
           Twingly::StringUtilities.logfmt(log_entry)
@@ -41,9 +41,9 @@ module Faraday
       def on_complete(env)
         info("response") do
           log_entry = {
-            "source": "upstream-response",
-            "status": env.status,
-            "request_id": request_id,
+            source: "upstream-response",
+            status: env.status,
+            request_id: request_id,
           }.merge(app_metadata)
 
           Twingly::StringUtilities.logfmt(log_entry)
@@ -68,7 +68,7 @@ module Faraday
 
       def app_metadata
         {
-          "release": Twingly::HTTP::Heroku.release_version,
+          release: Twingly::HTTP::Heroku.release_version,
         }
       end
 

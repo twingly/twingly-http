@@ -20,7 +20,7 @@ module Twingly
       end
 
       def self.review_app?
-        parent_name = ENV.fetch("HEROKU_PARENT_APP_NAME") {}
+        parent_name = ENV.fetch("HEROKU_PARENT_APP_NAME") { nil }
 
         return false unless parent_name
 
