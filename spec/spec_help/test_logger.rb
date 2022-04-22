@@ -3,7 +3,7 @@
 require "logger"
 
 class TestLogger
-  def self.logger_with_log_level_from_env(log_device = STDOUT)
+  def self.logger_with_log_level_from_env(log_device = $stdout)
     logger = Logger.new(log_device)
     logger.level = log_level_from_env
     logger.formatter = lambda do |severity, _time, _progname, msg|

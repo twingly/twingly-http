@@ -32,3 +32,12 @@ Layout/HashAlignment:
 
 Style/NumericLiterals:
   Enabled: false
+
+Style/RedundantFetchBlock:
+  Enabled: false
+
+Style/AccessorGrouping:
+  Enabled: false
+
+Layout/EmptyLineBetweenDefs:
+  Enabled: false

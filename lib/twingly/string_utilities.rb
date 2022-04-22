@@ -12,7 +12,7 @@ module Twingly
       return unless string
 
       if string[0] == char
-        string[1..-1]
+        string[1..]
       else
         string
       end

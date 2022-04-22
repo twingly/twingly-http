@@ -14,7 +14,7 @@ Example "one-liner" usage:
 
 ```
 ruby -rlogger -rtwingly/http -e '\
-    logger = Logger.new(STDOUT); logger.level = :INFO; \
+    logger = Logger.new($stdout); logger.level = :INFO; \
     puts Twingly::HTTP::Client.new(logger: logger, \
     base_user_agent: "").get("http://example.org").status'
 ```
@@ -25,7 +25,7 @@ Example `irb` usage:
 irb -rlogger -rtwingly/http
 ```
 ```ruby
-logger = Logger.new(STDOUT); logger.level = :INFO
+logger = Logger.new($stdout); logger.level = :INFO
 client = Twingly::HTTP::Client.new(logger: logger, base_user_agent: "")
 client.get("http://example.org").status
 ```
