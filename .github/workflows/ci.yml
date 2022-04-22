@@ -19,9 +19,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        - { ruby: 2.6.7 }
-        - { ruby: 2.7.3 }
-        - { ruby: 3.0.1 }
+        - { ruby: 2.7.6 }
+        - { ruby: 3.0.4 }
+        - { ruby: 3.1.2 }
         - { ruby: head, allow-failure: true }
 
     steps:
