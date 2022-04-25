@@ -488,7 +488,7 @@ RSpec.describe Twingly::HTTP::Client do
   describe "#post", vcr: Fixture.post_example_org do
     include_examples "common HTTP behaviour for", :post, "example.org"
 
-    let(:post_body)    {}
+    let(:post_body)    { nil }
     let(:post_headers) { {} }
     let(:request_response) do
       client.post(url, body: post_body, headers: post_headers)
@@ -628,7 +628,7 @@ RSpec.describe Twingly::HTTP::Client do
 
     let(:url) { "https://httpbin.org/put" }
 
-    let(:put_body)    {}
+    let(:put_body)    { nil }
     let(:put_headers) { {} }
     let(:request_response) do
       client.put(url, body: put_body, headers: put_headers)
@@ -678,7 +678,7 @@ RSpec.describe Twingly::HTTP::Client do
 
     let(:url) { "https://httpbin.org/patch" }
 
-    let(:patch_body)    {}
+    let(:patch_body)    { nil }
     let(:patch_headers) { {} }
     let(:request_response) do
       client.patch(url, body: patch_body, headers: patch_headers)

@@ -7,6 +7,9 @@ inherit_mode:
   merge:
     - Exclude
 
+AllCops:
+  NewCops: enable
+
 Style/Documentation:
   Enabled: false
 
@@ -31,4 +34,13 @@ Layout/HashAlignment:
   Enabled: false
 
 Style/NumericLiterals:
+  Enabled: false
+
+Style/RedundantFetchBlock:
+  Enabled: false
+
+Style/AccessorGrouping:
+  Enabled: false
+
+Layout/EmptyLineBetweenDefs:
   Enabled: false
