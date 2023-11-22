@@ -18,9 +18,10 @@ RSpec.describe Twingly::HTTP::Client do
 
   subject(:response) do
     {
-      headers: request_response.headers,
-      status:  request_response.status,
-      body:    request_response.body,
+      headers:   request_response.headers,
+      status:    request_response.status,
+      body:      request_response.body,
+      final_url: request_response.final_url,
     }
   end
 
@@ -124,7 +125,8 @@ RSpec.describe Twingly::HTTP::Client do
         it do
           is_expected.to match(headers: {},
                                status: 200,
-                               body: "")
+                               body: "",
+                               final_url: "http://redirect.1")
         end
       end
 
@@ -138,7 +140,8 @@ RSpec.describe Twingly::HTTP::Client do
         it do
           is_expected.to match(headers: { "location" => "http://redirect.1" },
                                status: 302,
-                               body: "")
+                               body: "",
+                               final_url: url)
         end
       end
 
@@ -154,7 +157,8 @@ RSpec.describe Twingly::HTTP::Client do
         it do
           is_expected.to match(headers: {},
                                status: 200,
-                               body: "")
+                               body: "",
+                               final_url: "http://redirect.5")
         end
       end
 
@@ -247,7 +251,8 @@ RSpec.describe Twingly::HTTP::Client do
         it do
           is_expected.to match(headers: {},
                                status: 200,
-                               body: body)
+                               body: body,
+                               final_url: url)
         end
 
         it 'calls the "on retry" callback' do
@@ -271,7 +276,8 @@ RSpec.describe Twingly::HTTP::Client do
           it do
             is_expected.to match(headers: {},
                                  status: 200,
-                                 body: body)
+                                 body: body,
+                                 final_url: url)
           end
 
           it 'calls the "on retry" callback' do
@@ -543,7 +549,8 @@ RSpec.describe Twingly::HTTP::Client do
     it do
       is_expected.to match(headers: be_an_instance_of(Hash),
                            status: 200,
-                           body: match(/Example Domain/))
+                           body: match(/Example Domain/),
+                           final_url: url)
     end
 
     # https://github.com/lostisland/faraday/pull/513#issuecomment-254794047
@@ -554,7 +561,8 @@ RSpec.describe Twingly::HTTP::Client do
       it do
         is_expected.to match(headers: be_an_instance_of(Hash),
                              status: 200,
-                             body: match(/Example Domain/))
+                             body: match(/Example Domain/),
+                             final_url: url)
       end
     end
 
@@ -735,7 +743,8 @@ RSpec.describe Twingly::HTTP::Client do
     it do
       is_expected.to match(headers: be_an_instance_of(Hash),
                            status: 200,
-                           body: be_an_instance_of(String))
+                           body: be_an_instance_of(String),
+                           final_url: url)
     end
 
     describe "headers" do
