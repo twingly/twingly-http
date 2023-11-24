@@ -1,5 +1,15 @@
 # Changelog
 
+## [v0.5.0](https://github.com/twingly/twingly-http/tree/v0.5.0) (2023-11-24)
+
+[Full Changelog](https://github.com/twingly/twingly-http/compare/v0.4.0...v0.5.0)
+
+**Merged pull requests:**
+
+- Add `final_url` to response [\#29](https://github.com/twingly/twingly-http/pull/29) ([Pontus4](https://github.com/Pontus4))
+- Keep GitHub Actions files up-to-date [\#27](https://github.com/twingly/twingly-http/pull/27) ([roback](https://github.com/roback))
+- Run CI with latest Rubies [\#26](https://github.com/twingly/twingly-http/pull/26) ([roback](https://github.com/roback))
+
 ## [v0.4.0](https://github.com/twingly/twingly-http/tree/v0.4.0) (2021-11-26)
 
 [Full Changelog](https://github.com/twingly/twingly-http/compare/v0.3.2...v0.4.0)
