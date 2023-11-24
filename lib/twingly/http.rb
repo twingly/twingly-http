@@ -97,7 +97,8 @@ module Twingly
 
         Response.new(headers: response.headers.to_h,
                      status: response.status,
-                     body: response.body)
+                     body: response.body,
+                     final_url: response.env.url.to_s)
       rescue *(@retryable_exceptions + TIMEOUT_EXCEPTIONS)
         raise ConnectionError
       rescue Faraday::UrlSizeLimit::LimitExceededError => error
@@ -258,13 +259,16 @@ module Twingly
       attr_reader :headers
       attr_reader :status
       attr_reader :body
+      attr_reader :final_url
 
       def initialize(headers: nil,
                      status: nil,
-                     body: nil)
+                     body: nil,
+                     final_url: nil)
         @headers       = headers
         @status        = status
         @body          = body
+        @final_url     = final_url
       end
     end
   end
