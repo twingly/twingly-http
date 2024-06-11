@@ -16,7 +16,7 @@ module Faraday
 
         if url_bytesize >= @max_size_bytes
           raise LimitExceededError,
-                "Expected URL below #{@max_size_bytes} bytes, "\
+                "Expected URL below #{@max_size_bytes} bytes, " \
                 "was #{url_bytesize} bytes"
         end
 
