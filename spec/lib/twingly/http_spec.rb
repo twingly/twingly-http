@@ -2,7 +2,7 @@
 
 class CustomError < StandardError; end
 
-RSpec.describe Twingly::HTTP::Client do
+RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathFormat
   let(:logger)            { Logger.new(File::NULL) }
   let(:url)               { "http://example.org/" }
   let(:base_user_agent)   { "Twingly::HTTP/1.0" }
@@ -61,8 +61,8 @@ RSpec.describe Twingly::HTTP::Client do
 
       context "without Heroku dyno metadata" do
         let(:expected_user_agent) do
-          "Twingly::HTTP/1.0 (Release/unknown_heroku_release_version; "\
-          "Commit/unknown_heroku_slug_commit)"
+          "Twingly::HTTP/1.0 (Release/unknown_heroku_release_version; " \
+            "Commit/unknown_heroku_slug_commit)"
         end
 
         it "does request with specified user agent" do
@@ -318,11 +318,11 @@ RSpec.describe Twingly::HTTP::Client do
       describe "request" do
         let(:expected_log_row) do
           "at=info " \
-          "source=upstream-request " \
-          "method=#{method.to_s.upcase} " \
-          "url=#{url} " \
-          "request_id=#{request_id} " \
-          "release=#{release}"
+            "source=upstream-request " \
+            "method=#{method.to_s.upcase} " \
+            "url=#{url} " \
+            "request_id=#{request_id} " \
+            "release=#{release}"
         end
 
         around do |example|
@@ -345,10 +345,10 @@ RSpec.describe Twingly::HTTP::Client do
         context "when no error occurs" do
           let(:expected_log_row) do
             "at=info " \
-            "source=upstream-response " \
-            "status=200 " \
-            "request_id=#{request_id} " \
-            "release=#{release}"
+              "source=upstream-response " \
+              "status=200 " \
+              "request_id=#{request_id} " \
+              "release=#{release}"
           end
 
           around do |example|

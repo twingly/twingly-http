@@ -17,15 +17,7 @@ Gem::Specification.new do |s|
   s.add_dependency "faraday", "~> 1", ">= 1.0.1"
   s.add_dependency "faraday_middleware", "~> 1.0.0"
 
-  s.add_development_dependency "climate_control", "~> 0.1"
-  s.add_development_dependency "rake", "~> 12"
-  s.add_development_dependency "rspec", "~> 3"
-  s.add_development_dependency "rubocop", "~> 1.14.0"
-  s.add_development_dependency "rubocop-rspec", "~> 2.4.0"
-  s.add_development_dependency "toxiproxy", "~> 1.0"
-  s.add_development_dependency "vcr", "~> 5.0"
-  s.add_development_dependency "webmock", "~> 3.7"
-
   s.files        = Dir.glob("{lib}/**/*") + %w(README.md LICENSE)
   s.require_path = "lib"
+  s.metadata["rubygems_mfa_required"] = "true"
 end
