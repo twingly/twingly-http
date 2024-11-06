@@ -46,9 +46,10 @@ module Twingly
       attr_accessor :logger
       attr_accessor :retryable_exceptions
 
-      def initialize(base_user_agent:, logger: default_logger)
+      def initialize(base_user_agent:, logger: default_logger, user_agent: nil)
         @base_user_agent = base_user_agent
         @logger          = logger
+        @user_agent      = user_agent
 
         initialize_defaults
       end
@@ -232,7 +233,7 @@ module Twingly
       end
 
       def user_agent
-        format(
+        @user_agent || format(
           "%<base>s (Release/%<release>s; Commit/%<commit>s)",
           base: @base_user_agent,
           release: Heroku.release_version,

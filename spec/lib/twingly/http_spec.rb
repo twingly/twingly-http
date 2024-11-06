@@ -2,14 +2,16 @@
 
 class CustomError < StandardError; end
 
+# rubocop:disable RSpec/MultipleMemoizedHelpers
 RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathFormat
   let(:logger)            { Logger.new(File::NULL) }
   let(:url)               { "http://example.org/" }
   let(:base_user_agent)   { "Twingly::HTTP/1.0" }
+  let(:user_agent)        { nil }
 
   let(:client) do
     client =
-      described_class.new(base_user_agent: base_user_agent, logger: logger)
+      described_class.new(base_user_agent: base_user_agent, logger: logger, user_agent: user_agent)
 
     client.request_id = request_id if defined?(request_id)
 
@@ -50,23 +52,46 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
 
         let(:commit) { "b5c40853a18a29982d65034be2ed53698112f60f" }
         let(:release) { "v112" }
-        let(:expected_user_agent) do
-          "#{base_user_agent} (Release/#{release}; Commit/#{commit})"
+
+        context "when custom user agent is not defined" do
+          let(:expected_user_agent) do
+            "#{base_user_agent} (Release/#{release}; Commit/#{commit})"
+          end
+
+          it "does request with default base user agent" do
+            expect(response.fetch(:body)).to eq(expected_user_agent)
+          end
         end
 
-        it "does request with specified user agent" do
-          expect(response.fetch(:body)).to eq(expected_user_agent)
+        context "when custom user agent is defined" do
+          let(:user_agent) { "TwinglyCustomUserAgent/1.0" }
+          let(:expected_custom_user_agent) { user_agent }
+
+          it "does request with custom user agent" do
+            expect(response.fetch(:body)).to eq(expected_custom_user_agent)
+          end
         end
       end
 
       context "without Heroku dyno metadata" do
-        let(:expected_user_agent) do
-          "Twingly::HTTP/1.0 (Release/unknown_heroku_release_version; " \
-            "Commit/unknown_heroku_slug_commit)"
+        context "when custom user agent is not defined" do
+          let(:expected_user_agent) do
+            "Twingly::HTTP/1.0 (Release/unknown_heroku_release_version; " \
+              "Commit/unknown_heroku_slug_commit)"
+          end
+
+          it "does request with default base user agent" do
+            expect(response.fetch(:body)).to eq(expected_user_agent)
+          end
         end
 
-        it "does request with specified user agent" do
-          expect(response.fetch(:body)).to eq(expected_user_agent)
+        context "when custom user agent is defined" do
+          let(:user_agent) { "TwinglyCustomUserAgent/1.0" }
+          let(:expected_custom_user_agent) { user_agent }
+
+          it "does request with custom user agent" do
+            expect(response.fetch(:body)).to eq(expected_custom_user_agent)
+          end
         end
       end
     end
@@ -810,3 +835,4 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
     end
   end
 end
+# rubocop:enable all
