@@ -1,5 +1,18 @@
 # Changelog
 
+## [v0.6.0](https://github.com/twingly/twingly-http/tree/v0.6.0) (2024-11-06)
+
+[Full Changelog](https://github.com/twingly/twingly-http/compare/v0.5.0...v0.6.0)
+
+**Closed issues:**
+
+- SSLError: SSL\_read: unexpected eof while reading [\#28](https://github.com/twingly/twingly-http/issues/28)
+
+**Merged pull requests:**
+
+- Adjust user\_agent creation [\#31](https://github.com/twingly/twingly-http/pull/31) ([yendi127](https://github.com/yendi127))
+- Run CI on maintained Ruby versions and update `.ruby-version` [\#30](https://github.com/twingly/twingly-http/pull/30) ([Pontus4](https://github.com/Pontus4))
+
 ## [v0.5.0](https://github.com/twingly/twingly-http/tree/v0.5.0) (2023-11-24)
 
 [Full Changelog](https://github.com/twingly/twingly-http/compare/v0.4.0...v0.5.0)
