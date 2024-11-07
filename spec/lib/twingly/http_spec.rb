@@ -440,6 +440,35 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
       end
     end
 
+    context "when a maximum response body size is set" do
+      let(:max_response_body_size_bytes) { 64 }
+
+      before do
+        client.max_response_body_size_bytes = max_response_body_size_bytes
+
+        stub_request(:any, url).to_return(body: body)
+      end
+
+      context "when response body is below limit" do
+        let(:body) { "a" * max_response_body_size_bytes }
+
+        before { request_response }
+
+        it "returns the response with the expected body" do
+          expect(response.fetch(:body)).to eq(body)
+        end
+      end
+
+      context "when response body is above limit" do
+        let(:body) { "a" * (max_response_body_size_bytes + 1) }
+
+        it "raises an error" do
+          expect { request_response }
+            .to raise_error(Twingly::HTTP::ResponseBodySizeLimitExceededError)
+        end
+      end
+    end
+
     context "with unreliable hosts" do
       let(:example_timeout) { 1.0 }
 
