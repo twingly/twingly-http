@@ -1,5 +1,17 @@
 # Changelog
 
+## [v0.7.0](https://github.com/twingly/twingly-http/tree/v0.7.0) (2024-11-07)
+
+[Full Changelog](https://github.com/twingly/twingly-http/compare/v0.6.0...v0.7.0)
+
+**Implemented enhancements:**
+
+- Add capability to abort request when content-length is too large [\#21](https://github.com/twingly/twingly-http/issues/21)
+
+**Merged pull requests:**
+
+- Make it possible to configure max response body size [\#32](https://github.com/twingly/twingly-http/pull/32) ([roback](https://github.com/roback))
+
 ## [v0.6.0](https://github.com/twingly/twingly-http/tree/v0.6.0) (2024-11-06)
 
 [Full Changelog](https://github.com/twingly/twingly-http/compare/v0.5.0...v0.6.0)
