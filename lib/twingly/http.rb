@@ -208,8 +208,8 @@ module Twingly
             faraday.use FaradayMiddleware::FollowRedirects,
                         limit: @follow_redirects_limit
           end
-          faraday.request :response_body_size_limit,
-                          max_size_bytes: @max_response_body_size_bytes
+          faraday.response :response_body_size_limit,
+                           max_size_bytes: @max_response_body_size_bytes
           faraday.adapter Faraday.default_adapter
           faraday.headers[:user_agent] = user_agent
         end
