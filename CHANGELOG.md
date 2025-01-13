@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.7.1](https://github.com/twingly/twingly-http/tree/v0.7.1) (2025-01-13)
+
+[Full Changelog](https://github.com/twingly/twingly-http/compare/v0.7.0...v0.7.1)
+
+**Merged pull requests:**
+
+- Fix bug causing the bodies of all requests to be concatenated [\#33](https://github.com/twingly/twingly-http/pull/33) ([roback](https://github.com/roback))
+
 ## [v0.7.0](https://github.com/twingly/twingly-http/tree/v0.7.0) (2024-11-07)
 
 [Full Changelog](https://github.com/twingly/twingly-http/compare/v0.6.0...v0.7.0)
