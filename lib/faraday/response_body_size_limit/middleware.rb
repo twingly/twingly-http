@@ -33,6 +33,6 @@ module Faraday
   end
 end
 
-Faraday::Request.register_middleware(
+Faraday::Response.register_middleware(
   response_body_size_limit: Faraday::ResponseBodySizeLimit::Middleware
 )

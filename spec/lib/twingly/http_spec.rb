@@ -133,10 +133,11 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
 
             stub_request(:any, redir_url)
               .to_return(status: 302,
-                         headers: { "Location" => "#{base_redir_url}#{n + 1}" })
+                         headers: { "Location" => "#{base_redir_url}#{n + 1}" },
+                         body: "redirect...")
           end
 
-          stub_request(:any, "#{base_redir_url}#{times}").to_return(status: 200)
+          stub_request(:any, "#{base_redir_url}#{times}").to_return(status: 200, body: "finished!")
         end
       end
 
@@ -150,8 +151,12 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
         it do
           is_expected.to match(headers: {},
                                status: 200,
-                               body: "",
+                               body: "finished!",
                                final_url: "http://redirect.1")
+        end
+
+        it "only returns the body of the final request" do
+          expect(response.fetch(:body)).to eq("finished!")
         end
       end
 
@@ -165,7 +170,7 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
         it do
           is_expected.to match(headers: { "location" => "http://redirect.1" },
                                status: 302,
-                               body: "",
+                               body: "redirect...",
                                final_url: url)
         end
       end
@@ -182,7 +187,7 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
         it do
           is_expected.to match(headers: {},
                                status: 200,
-                               body: "",
+                               body: "finished!",
                                final_url: "http://redirect.5")
         end
       end
