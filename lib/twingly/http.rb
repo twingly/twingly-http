@@ -50,10 +50,11 @@ module Twingly
       attr_accessor :logger
       attr_accessor :retryable_exceptions
 
-      def initialize(base_user_agent:, logger: default_logger, user_agent: nil)
+      def initialize(base_user_agent:, logger: default_logger, user_agent: nil, proxy: nil)
         @base_user_agent = base_user_agent
         @logger          = logger
         @user_agent      = user_agent
+        @proxy           = proxy
 
         initialize_defaults
       end
@@ -212,6 +213,7 @@ module Twingly
                            max_size_bytes: @max_response_body_size_bytes
           faraday.adapter Faraday.default_adapter
           faraday.headers[:user_agent] = user_agent
+          faraday.proxy = @proxy if @proxy
         end
       end
 

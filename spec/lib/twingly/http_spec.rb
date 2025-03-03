@@ -688,6 +688,40 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
         end
       end
     end
+
+    fdescribe "proxy" do
+      let(:test_url) { "http://example.com" }
+
+      context "when a proxy is set" do
+        let(:proxy_url) { "http://localhost:1080" }
+        let(:proxy_client) do
+          described_class.new(
+            base_user_agent: base_user_agent,
+            logger: logger,
+            user_agent: user_agent,
+            proxy: proxy_url
+          )
+        end
+
+        before(:all) do
+          let(:toxiproxy) { Toxiproxy.new(host: "localhost", port: 8474) }
+          let(:proxy) { toxiproxy.create("proxy", listen: "localhost:1080", upstream: "https://example.com") }
+        end
+
+        after(:all) do
+          proxy.delete
+          toxiproxy.close
+        end
+
+        it "sets the proxy URL correctly in the Twingly HTTP client" do
+          allow(proxy_client).to receive(proxy).and_return(proxy_url)
+          response = proxy_client.get("https://example.com")
+
+          expect(proxy_client.proxy).to eq(proxy_url)
+          expect(response.status).to eq(200)
+        end
+      end
+    end
   end
 
   describe "#put", vcr: Fixture.put_httpbin_org do
