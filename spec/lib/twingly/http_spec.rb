@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "../../spec_help/http_test_server"
+
 class CustomError < StandardError; end
 
 # rubocop:disable RSpec/MultipleMemoizedHelpers
@@ -705,6 +707,48 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
           connection = proxy_client.send(:create_http_client)
 
           expect(connection.proxy.uri.to_s).to eq(proxy_url)
+        end
+      end
+
+      context "when using a real proxy server" do
+        let(:proxy_pid_and_url) do
+          HttpTestServer.spawn("proxy_server")
+        end
+        let(:proxy_pid) { proxy_pid_and_url[0] }
+        let(:proxy_url) { proxy_pid_and_url[1] }
+
+        let(:target_pid_and_url) do
+          HttpTestServer.spawn("echoed_headers_in_body")
+        end
+        let(:target_pid) { target_pid_and_url[0] }
+        let(:target_url) { target_pid_and_url[1] }
+
+        let(:client) do
+          described_class.new(
+            base_user_agent: "Test Agent",
+            proxy: proxy_url
+          )
+        end
+
+        after do
+          HttpTestServer.stop(proxy_pid)
+          HttpTestServer.stop(target_pid)
+        end
+
+        it "routes requests through the proxy", vcr: false do # rubocop:disable RSpec/ExampleLength
+          VCR.eject_cassette if VCR.current_cassette
+          VCR.turn_off!
+
+          begin
+            WebMock.allow_net_connect!
+
+            response = client.get(target_url)
+
+            expect(response.body).to include("HTTP_X_PROXIED_BY")
+          ensure
+            VCR.turn_on!
+            WebMock.disable_net_connect!
+          end
         end
       end
     end

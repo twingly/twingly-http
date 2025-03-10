@@ -16,6 +16,8 @@ require_relative "spec_help/env_helper"
 require_relative "spec_help/fixture"
 require_relative "spec_help/test_logger"
 require_relative "spec_help/toxiproxy_config"
+require_relative "spec_help/http_test_server"
+require_relative "spec_help/port_prober"
 
 # Start with a clean slate, destroy all proxies if any
 Toxiproxy.all.destroy
