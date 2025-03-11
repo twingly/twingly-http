@@ -19,6 +19,21 @@ require_relative "spec_help/toxiproxy_config"
 require_relative "spec_help/http_test_server"
 require_relative "spec_help/port_prober"
 
+module HttpHelpers
+  def with_real_http_connections
+    original_cassette = VCR.current_cassette
+    VCR.eject_cassette if original_cassette
+    VCR.turn_off!
+    WebMock.allow_net_connect!
+
+    yield
+  ensure
+    WebMock.disable_net_connect!
+    VCR.turn_on!
+    VCR.insert_cassette(original_cassette.name) if original_cassette
+  end
+end
+
 # Start with a clean slate, destroy all proxies if any
 Toxiproxy.all.destroy
 Toxiproxy.populate(ToxiproxyConfig.proxies)
@@ -35,6 +50,7 @@ end
 
 RSpec.configure do |conf|
   conf.include EnvHelper
+  conf.include HttpHelpers
 
   conf.after(:suite) do
     Toxiproxy.all.destroy # Be nice, end with a clean slate
