@@ -5,10 +5,6 @@ require "timeout"
 module HttpTestServer
   module_function
 
-  def spawn_server_with_echoed_headers_in_body
-    spawn("echoed_headers_in_body")
-  end
-
   def spawn(server_name, env: {}) # rubocop:disable Metrics/MethodLength
     ip_address = PortProber.localhost
     port = PortProber.random(ip_address)

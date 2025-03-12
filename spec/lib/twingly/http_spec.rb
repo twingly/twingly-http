@@ -535,62 +535,31 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
     end
   end
 
-  RSpec.shared_examples "verifies proxy functionality" do |http_method|
+  RSpec.shared_examples "verifies proxy functionality" do
     context "when a proxy is provided" do
       let(:proxy_pid_and_url) { HttpTestServer.spawn("proxy_server") }
       let(:proxy_pid) { proxy_pid_and_url[0] }
       let(:proxy_url) { proxy_pid_and_url[1] }
-
       let(:target_pid_and_url) { HttpTestServer.spawn("echoed_headers_in_body") }
       let(:target_pid) { target_pid_and_url[0] }
       let(:target_url) { target_pid_and_url[1] }
-
       let(:client) do
         described_class.new(
-          base_user_agent: "Test Agent",
+          base_user_agent: base_user_agent,
           proxy: proxy_url
         )
       end
+      let(:url) { target_url }
 
       after do
         HttpTestServer.stop(proxy_pid)
         HttpTestServer.stop(target_pid)
       end
 
-      it "routes requests through the proxy", vcr: false do # rubocop:disable RSpec/ExampleLength
+      it "routes requests through the proxy", vcr: false do
         with_real_http_connections do
-          response = case http_method
-                     when :get
-                       client.get(target_url)
-                     when :post
-                       client.post(target_url, body: "test")
-                     when :put
-                       client.put(target_url, body: "test")
-                     when :patch
-                       client.patch(target_url, body: "test")
-                     when :delete
-                       client.delete(target_url)
-                     end
-
-          expect(response.body).to include("HTTP_X_PROXIED_BY")
+          expect(response.fetch(:body)).to include("HTTP_X_PROXIED_BY")
         end
-      end
-    end
-  end
-
-  RSpec.shared_examples "configures proxy correctly" do
-    context "when a proxy is provided" do
-      let(:proxy_url) { "http://127.0.0.1:8080" }
-      let(:proxy_client) do
-        described_class.new(
-          base_user_agent: base_user_agent,
-          proxy: proxy_url
-        )
-      end
-
-      it "sets the proxy" do
-        connection = proxy_client.send(:create_http_client)
-        expect(connection.proxy.uri.to_s).to eq(proxy_url)
       end
     end
   end
@@ -614,8 +583,7 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
 
   describe "#post", vcr: Fixture.post_example_org do
     include_examples "common HTTP behaviour for", :post, "example.org"
-    include_examples "verifies proxy functionality", :post
-    include_examples "configures proxy correctly", :post
+    include_examples "verifies proxy functionality"
 
     let(:post_body)    { nil }
     let(:post_headers) { {} }
@@ -664,9 +632,7 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
 
   describe "#get", vcr: Fixture.example_org do
     include_examples "common HTTP behaviour for", :get, "example.org"
-    include_examples "verifies proxy functionality", :get
-    include_examples "configures proxy correctly", :get
-
+    include_examples "verifies proxy functionality"
     let(:request_response) do
       client.get(url)
     end
@@ -758,7 +724,7 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
 
   describe "#put", vcr: Fixture.put_httpbin_org do
     include_examples "common HTTP behaviour for", :put, "https://httpbin.org/put"
-    include_examples "configures proxy correctly", :put
+    include_examples "verifies proxy functionality"
 
     let(:url) { "https://httpbin.org/put" }
 
@@ -809,7 +775,7 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
 
   describe "#patch", vcr: Fixture.patch_httpbin_org do
     include_examples "common HTTP behaviour for", :patch, "https://httpbin.org/patch"
-    include_examples "configures proxy correctly", :patch
+    include_examples "verifies proxy functionality"
 
     let(:url) { "https://httpbin.org/patch" }
 
@@ -860,7 +826,7 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
 
   describe "#delete", vcr: Fixture.delete_httpbin_org do
     include_examples "common HTTP behaviour for", :delete, "https://httpbin.org/delete"
-    include_examples "configures proxy correctly", :delete
+    include_examples "verifies proxy functionality"
 
     let(:url) { "https://httpbin.org/delete" }
 
