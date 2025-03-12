@@ -5,6 +5,8 @@ require "timeout"
 module HttpTestServer
   module_function
 
+  TestServer = Struct.new(:pid, :url)
+
   def spawn(server_name, env: {}) # rubocop:disable Metrics/MethodLength
     ip_address = PortProber.localhost
     port = PortProber.random(ip_address)
@@ -23,7 +25,7 @@ module HttpTestServer
       sleep 0.05 until started?(pid) && PortProber.port_open?(ip_address, port)
     end
 
-    [pid, url]
+    TestServer.new(pid, url)
   end
 
   def stop(pid)

@@ -537,23 +537,19 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
 
   RSpec.shared_examples "verifies proxy functionality" do
     context "when a proxy is provided" do
-      let(:proxy_pid_and_url) { HttpTestServer.spawn("proxy_server") }
-      let(:proxy_pid) { proxy_pid_and_url[0] }
-      let(:proxy_url) { proxy_pid_and_url[1] }
-      let(:target_pid_and_url) { HttpTestServer.spawn("echoed_headers_in_body") }
-      let(:target_pid) { target_pid_and_url[0] }
-      let(:target_url) { target_pid_and_url[1] }
+      let(:proxy_server)  { HttpTestServer.spawn("proxy_server") }
+      let(:target_server) { HttpTestServer.spawn("echoed_headers_in_body") }
       let(:client) do
         described_class.new(
           base_user_agent: base_user_agent,
-          proxy: proxy_url
+          proxy: proxy_server.url
         )
       end
-      let(:url) { target_url }
+      let(:url) { target_server.url }
 
       after do
-        HttpTestServer.stop(proxy_pid)
-        HttpTestServer.stop(target_pid)
+        HttpTestServer.stop(proxy_server.pid)
+        HttpTestServer.stop(target_server.pid)
       end
 
       it "routes requests through the proxy", vcr: false do
@@ -633,6 +629,7 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
   describe "#get", vcr: Fixture.example_org do
     include_examples "common HTTP behaviour for", :get, "example.org"
     include_examples "verifies proxy functionality"
+
     let(:request_response) do
       client.get(url)
     end
