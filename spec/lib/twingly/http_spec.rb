@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "../../spec_help/http_test_server"
+
 class CustomError < StandardError; end
 
 # rubocop:disable RSpec/MultipleMemoizedHelpers
@@ -533,6 +535,31 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
     end
   end
 
+  RSpec.shared_examples "verifies proxy functionality" do
+    context "when a proxy is provided" do
+      let(:proxy_server)  { HttpTestServer.spawn("proxy_server") }
+      let(:target_server) { HttpTestServer.spawn("echoed_headers_in_body") }
+      let(:client) do
+        described_class.new(
+          base_user_agent: base_user_agent,
+          proxy: proxy_server.url
+        )
+      end
+      let(:url) { target_server.url }
+
+      after do
+        HttpTestServer.stop(proxy_server.pid)
+        HttpTestServer.stop(target_server.pid)
+      end
+
+      it "routes requests through the proxy", vcr: false do
+        with_real_http_connections do
+          expect(response.fetch(:body)).to include("HTTP_X_PROXIED_BY")
+        end
+      end
+    end
+  end
+
   describe "#initialize" do
     context "when no logger is given" do
       subject(:default_logger) do
@@ -552,6 +579,7 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
 
   describe "#post", vcr: Fixture.post_example_org do
     include_examples "common HTTP behaviour for", :post, "example.org"
+    include_examples "verifies proxy functionality"
 
     let(:post_body)    { nil }
     let(:post_headers) { {} }
@@ -600,6 +628,7 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
 
   describe "#get", vcr: Fixture.example_org do
     include_examples "common HTTP behaviour for", :get, "example.org"
+    include_examples "verifies proxy functionality"
 
     let(:request_response) do
       client.get(url)
@@ -692,6 +721,7 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
 
   describe "#put", vcr: Fixture.put_httpbin_org do
     include_examples "common HTTP behaviour for", :put, "https://httpbin.org/put"
+    include_examples "verifies proxy functionality"
 
     let(:url) { "https://httpbin.org/put" }
 
@@ -742,6 +772,7 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
 
   describe "#patch", vcr: Fixture.patch_httpbin_org do
     include_examples "common HTTP behaviour for", :patch, "https://httpbin.org/patch"
+    include_examples "verifies proxy functionality"
 
     let(:url) { "https://httpbin.org/patch" }
 
@@ -792,6 +823,7 @@ RSpec.describe Twingly::HTTP::Client do # rubocop:disable RSpec/SpecFilePathForm
 
   describe "#delete", vcr: Fixture.delete_httpbin_org do
     include_examples "common HTTP behaviour for", :delete, "https://httpbin.org/delete"
+    include_examples "verifies proxy functionality"
 
     let(:url) { "https://httpbin.org/delete" }
 
