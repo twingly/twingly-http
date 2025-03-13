@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.8.0](https://github.com/twingly/twingly-http/tree/v0.8.0) (2025-03-13)
+
+[Full Changelog](https://github.com/twingly/twingly-http/compare/v0.7.1...v0.8.0)
+
+**Merged pull requests:**
+
+- Add proxy support to HTTP Client [\#35](https://github.com/twingly/twingly-http/pull/35) ([cequele](https://github.com/cequele))
+
 ## [v0.7.1](https://github.com/twingly/twingly-http/tree/v0.7.1) (2025-01-13)
 
 [Full Changelog](https://github.com/twingly/twingly-http/compare/v0.7.0...v0.7.1)
